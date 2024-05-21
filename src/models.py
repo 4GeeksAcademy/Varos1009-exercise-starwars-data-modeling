@@ -1,3 +1,4 @@
+
 import os
 import sys
 from sqlalchemy import Column, ForeignKey, Integer, String
@@ -7,26 +8,67 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
+class User(Base):
+    __tablename__ = 'user'
+    
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+    name = Column(String(25), nullable=False,unique=True)
+    passport = Column(String(12), nullable=False,unique=True)
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
+    def serialize(self):
+        return {
+            'id ':self.id,
+            'name' :self.name,
+            'passport': self.passport
+        }
+
+class Planets(Base):
+    __tablename__ = 'planets'
+   
     id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
+    name = Column(String(25),nullable=False,unique=True)
+
+    def serialize(self):
+        return {
+            'id':self.id,
+            'name':self.name
+        }
+
+class People(Base):
+    __tablename__ = 'people'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(25),nullable=False,unique=True)
+    planet = Column(String(25),ForeignKey(Planets.name))
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'planet': self.planet
+        }
+    
+class Favorites(Base):
+    __tablename__ = 'favorites'
+
+    id = Column(Integer, primary_key = True)
+    User_id = Column(Integer, ForeignKey(User.id))
+    Planets_id = Column(Integer, ForeignKey(Planets.id))
+    People_id = Column(Integer, ForeignKey(People.id))
+
+
+         
+
+
+
+    
     person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+   
 
     def to_dict(self):
-        return {}
+        return {
+
+        }
 
 ## Draw from SQLAlchemy base
 render_er(Base, 'diagram.png')
