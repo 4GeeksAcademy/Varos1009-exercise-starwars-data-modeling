@@ -62,13 +62,7 @@ class Favorites(Base):
 
 
     
-    person_id = Column(Integer, ForeignKey('person.id'))
-   
-
-    def to_dict(self):
-        return {
-
-        }
+    
 
 ## Draw from SQLAlchemy base
 render_er(Base, 'diagram.png')
